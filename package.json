@@ -4,16 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CodyJReed/nodeChatApp.git"
   },
+  "engines": {
+    "node": "11.5.0"
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/CodyJReed/nodeChatApp/issues"
   },
-  "homepage": "https://github.com/CodyJReed/nodeChatApp#readme"
+  "homepage": "https://github.com/CodyJReed/nodeChatApp#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
