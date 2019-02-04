@@ -17,8 +17,6 @@ const users = new Users();
 app.use(express.static(publicPath));
 
 io.on("connection", socket => {
-  console.log("User connected");
-
   socket.on("join", (params, cb) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return cb("Name and room name are required");
@@ -43,16 +41,24 @@ io.on("connection", socket => {
   });
 
   socket.on("createMessage", (msg, cb) => {
-    console.log("createMessage", msg);
-    io.emit("newMessage", generateMessage(msg.from, msg.text));
-    cb("This is from the server");
+    const user = users.getUser(socket.id);
+
+    if (user && isRealString(msg.text)) {
+      io.to(user.room).emit("newMessage", generateMessage(user.name, msg.text));
+    }
+
+    cb();
   });
 
   socket.on("createLocationMessage", data => {
-    io.emit(
-      "newLocationMessage",
-      generateLocation("Admin", `${data.latitude}, ${data.longitude}`)
-    );
+    const user = users.getUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit(
+        "newLocationMessage",
+        generateLocation(`${user.name}`, `${data.latitude}, ${data.longitude}`)
+      );
+    }
   });
 
   socket.on("disconnect", params => {

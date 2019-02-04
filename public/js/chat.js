@@ -80,10 +80,10 @@ socket.on("newLocationMessage", function(data) {
 const msgFrm = $("#message-form").on("submit", function(e) {
   e.preventDefault();
   const msgTextBox = $("[name=message]");
+
   socket.emit(
     "createMessage",
     {
-      from: "User",
       text: msgTextBox.val()
     },
     function() {
