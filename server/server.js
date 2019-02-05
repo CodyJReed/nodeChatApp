@@ -21,6 +21,12 @@ io.on("connection", socket => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return cb("Name and room name are required");
     }
+    let userList = users.getUserList(params.room);
+    userList.forEach(user => {
+      if (user === params.name) {
+        return cb("Choose another display name");
+      }
+    });
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id, params.name, params.room);
