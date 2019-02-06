@@ -17,10 +17,24 @@ const users = new Users();
 app.use(express.static(publicPath));
 
 io.on("connection", socket => {
+  socket.on("requestAvailableRooms", () => {
+    socket.emit("availableRooms", users.getUserRooms());
+  });
+
   socket.on("join", (params, cb) => {
-    if (!isRealString(params.name) || !isRealString(params.room)) {
+    if (
+      !isRealString(params.name) ||
+      (!isRealString(params.room) && params.options === undefined)
+    ) {
       return cb("Name and room name are required");
     }
+
+    if (params.options && !params.room) {
+      params.room = params.options;
+    } else {
+      params.options = undefined;
+    }
+
     let userList = users.getUserList(params.room);
     userList.forEach(user => {
       if (user === params.name) {
@@ -30,6 +44,9 @@ io.on("connection", socket => {
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id, params.name, params.room);
+    users.addRoom(params.room);
+
+    io.emit("availableRooms", users.getUserRooms());
 
     io.to(params.room).emit("updateUserList", users.getUserList(params.room));
     socket.emit(
@@ -71,6 +88,8 @@ io.on("connection", socket => {
     const user = users.removeUser(socket.id);
 
     if (user) {
+      users.removeRoom(user.room);
+      io.emit("availableRooms", users.getUserRooms());
       io.to(user.room).emit("updateUserList", users.getUserList(user.room));
       io.to(user.room).emit(
         "newMessage",

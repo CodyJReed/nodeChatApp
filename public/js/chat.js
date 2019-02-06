@@ -57,11 +57,6 @@ socket.on("newMessage", function(data) {
 
   $("#messages").append(html);
   scrollToBottom();
-
-  // const li = $("<li></li>");
-  // li.text(`${data.from} ${formattedTime}: ${data.text}`);
-  //
-  // $("#messages").append(li);
 });
 
 socket.on("newLocationMessage", function(data) {

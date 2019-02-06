@@ -1,6 +1,7 @@
 class Users {
   constructor() {
     this.users = [];
+    this.rooms = [];
   }
 
   addUser(id, name, room) {
@@ -27,6 +28,23 @@ class Users {
     const namesArray = users.map(user => user.name);
 
     return namesArray;
+  }
+  getUserRooms() {
+    return this.rooms;
+  }
+
+  addRoom(room) {
+    let a = this.rooms.find(e => e === room);
+    if (!a || undefined) {
+      this.rooms.push(room);
+    }
+  }
+
+  removeRoom(user) {
+    const users = this.getUserList(user);
+    if (users.length <= 0) {
+      return (this.rooms = this.rooms.filter(room => room !== user));
+    }
   }
 }
 

@@ -1,3 +1,7 @@
+.warning {
+  font-weight: bold;
+  font-size: 17px;
+}
 button,
 button:hover {
   border: none;
