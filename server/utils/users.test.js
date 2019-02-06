@@ -4,9 +4,11 @@ const { Users } = require("./users");
 
 describe("Users", () => {
   let users;
+  let rooms;
 
   beforeEach(() => {
     users = new Users();
+    users.rooms = [];
     users.users = [
       {
         id: "1",
@@ -79,5 +81,38 @@ describe("Users", () => {
 
     expect(user).toBeFalsy();
     expect(user).toEqual(undefined);
+  });
+
+  it("should return a group of user rooms", () => {
+    const res = users.getUserRooms();
+    expect(res.length).toEqual(2);
+  });
+
+  it("should add a new user room to the rooms array", () => {
+    const user = {
+      id: "123",
+      name: "Phillip",
+      room: "test-3"
+    };
+    users.addRoom(user.room);
+    expect(users.rooms.length).toEqual(1);
+    expect(users.rooms).toEqual(["test-3"]);
+  });
+
+  it("should remove an occupied room from the rooms array", () => {
+    const userToRemove = users.users.find(user => user.id === "2");
+    const user = users.removeUser(userToRemove.id);
+    users.removeRoom(user.room);
+    let group = users.getUserRooms();
+    expect(group.length).toEqual(1);
+  });
+
+  it("should not remove a room if occupied by a user", () => {
+    const userToRemove = users.users.find(user => user.id === "1");
+    const user = users.removeUser(userToRemove.id);
+    users.removeRoom(user.room);
+    let group = users.getUserRooms();
+    expect(users.users.length).toEqual(2);
+    expect(group.length).toEqual(2);
   });
 });

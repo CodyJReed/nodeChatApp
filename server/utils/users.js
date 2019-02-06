@@ -29,9 +29,6 @@ class Users {
 
     return namesArray;
   }
-  getUserRooms() {
-    return this.rooms;
-  }
 
   addRoom(room) {
     let a = this.rooms.find(e => e === room);
@@ -45,6 +42,16 @@ class Users {
     if (users.length <= 0) {
       return (this.rooms = this.rooms.filter(room => room !== user));
     }
+  }
+
+  getUserRooms() {
+    if (this.users.length > 0) {
+      let previousUsers = this.users;
+      previousUsers.forEach(user => {
+        this.addRoom(user.room);
+      });
+    }
+    return this.rooms;
   }
 }
 
